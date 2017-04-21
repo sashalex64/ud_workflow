@@ -10,6 +10,7 @@ var merge = require('merge-stream');
 var newer = require('gulp-newer');
 var imagemin = require('gulp-imagemin');
 var injectPartials = require('gulp-inject-partials');
+var minify = require('gulp-minify');
 
 var SOURCEPATHS = {
     sassSource:'src/scss/*.scss',
@@ -75,6 +76,13 @@ gulp.task('scripts', ['clean-scripts'], function() {
    .pipe(browserify())
    .pipe(gulp.dest(APPPATH.js))
 });
+gulp.task('compress', function() {
+   gulp.src(SOURCEPATHS.jsSource)
+   .pipe(concat('main.js'))
+   .pipe(browserify())
+   .pipe(minify())
+   .pipe(gulp.dest(APPPATH.js))
+});
 
 gulp.task('html', function() {
     return gulp.src(SOURCEPATHS.htmlSource)
@@ -96,7 +104,7 @@ gulp.task('serve', ['sass'], function() {
         browser: ['chrome']
     });
 });
-gulp.task('watch', ['serve', 'sass', /*'copy',*/ 'clean-html', 'scripts', 'clean-scripts', 'moveFonts', 'images', 'html'], function() {
+gulp.task('watch', ['serve', 'sass', /*'copy',*/ 'clean-html', 'scripts', 'clean-scripts', 'moveFonts', 'images', 'html','compress'], function() {
     gulp.watch([SOURCEPATHS.sassSource], ['sass']);
     /*gulp.watch([SOURCEPATHS.htmlSource], ['copy']);*/
     gulp.watch([SOURCEPATHS.jsSource], ['scripts']);
