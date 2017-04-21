@@ -6758,11 +6758,11 @@ button.close {
 
 /*     STYLES     */
 body {
-  background-color: #bf4040;
+  background-color: #9f6060;
 }
 
 h1 {
-  color: #fff;
+  color: #bfbfbf;
 }
 
 h1:hover {
@@ -6786,5 +6786,5 @@ footer h3 {
 }
 
 footer p {
-  color: yellow;
+  color: #bfbf40;
 }

@@ -1,7 +1,7 @@
 /*     STYLES     */
 
-$bg-color: desaturate(red, 50%);
-$tx-color:#fff;
+$bg-color: desaturate(red, 75%);
+$tx-color:darken(#fff, 25%);
 body {
     background-color: $bg-color;
 }
@@ -27,6 +27,6 @@ footer {
         font-family: cursive;
     }
     p {
-         color:yellow;   
+         color:desaturate(yellow, 50%);   
     }
 }
