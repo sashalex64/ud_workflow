@@ -11,6 +11,8 @@ var newer = require('gulp-newer');
 var imagemin = require('gulp-imagemin');
 var injectPartials = require('gulp-inject-partials');
 var minify = require('gulp-minify');
+var rename = require('gulp-rename');
+var cssmin = require('gulp-cssmin');
 
 var SOURCEPATHS = {
     sassSource:'src/scss/*.scss',
@@ -44,6 +46,17 @@ gulp.task('clean-scripts', function() {
     })
     .pipe(clean());
 });
+/*==== production task=====*/
+
+
+gulp.task('compress', function() {
+   gulp.src(SOURCEPATHS.jsSource)
+   .pipe(concat('main.js'))
+   .pipe(browserify())
+   .pipe(minify())
+   .pipe(gulp.dest(APPPATH.js))
+});
+/*
 
 gulp.task('sass', function(){
     var bootstrapCSS = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
@@ -56,6 +69,23 @@ gulp.task('sass', function(){
         .pipe(concat('app.css'))
         .pipe(gulp.dest(APPPATH.css));
 });
+
+*/
+gulp.task('compresscss', function(){
+    var bootstrapCSS = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
+    var sassFiles;
+    
+   sassFiles = gulp.src(SOURCEPATHS.sassSource)
+       .pipe(autoprefixer('last 10 versions'))
+       .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+       return merge(bootstrapCSS, sassFiles)
+        .pipe(concat('app.css'))
+        .pipe(cssmin())
+        .pipe(rename({suffix:'.min'}))
+        .pipe(gulp.dest(APPPATH.css));
+});
+
+/*=====end of production task ====*/
 
 gulp.task('images', function() {
     return gulp.src(SOURCEPATHS.imgSource)
@@ -74,13 +104,6 @@ gulp.task('scripts', ['clean-scripts'], function() {
    gulp.src(SOURCEPATHS.jsSource)
    .pipe(concat('main.js'))
    .pipe(browserify())
-   .pipe(gulp.dest(APPPATH.js))
-});
-gulp.task('compress', function() {
-   gulp.src(SOURCEPATHS.jsSource)
-   .pipe(concat('main.js'))
-   .pipe(browserify())
-   .pipe(minify())
    .pipe(gulp.dest(APPPATH.js))
 });
 
