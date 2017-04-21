@@ -13,6 +13,7 @@ var injectPartials = require('gulp-inject-partials');
 var minify = require('gulp-minify');
 var rename = require('gulp-rename');
 var cssmin = require('gulp-cssmin');
+var htmlmin = require('gulp-htmlmin');
 
 var SOURCEPATHS = {
     sassSource:'src/scss/*.scss',
@@ -30,6 +31,17 @@ var APPPATH = {
     img:'app/img'
 }
 
+gulp.task('sass', function(){
+    var bootstrapCSS = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
+    var sassFiles;
+    
+   sassFiles = gulp.src(SOURCEPATHS.sassSource)
+       .pipe(autoprefixer('last 10 versions'))
+       .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+       return merge(bootstrapCSS, sassFiles)
+        .pipe(concat('app.css'))
+        .pipe(gulp.dest(APPPATH.css));
+});
 
 gulp.task('clean-html', function() {
     return gulp.src(APPPATH.root + '/*.html', {
@@ -46,7 +58,8 @@ gulp.task('clean-scripts', function() {
     })
     .pipe(clean());
 });
-/*==== production task=====*/
+
+/*====PRODUCTION TASKS=====*/
 
 
 gulp.task('compress', function() {
@@ -56,21 +69,9 @@ gulp.task('compress', function() {
    .pipe(minify())
    .pipe(gulp.dest(APPPATH.js))
 });
-/*
 
-gulp.task('sass', function(){
-    var bootstrapCSS = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
-    var sassFiles;
-    
-   sassFiles = gulp.src(SOURCEPATHS.sassSource)
-       .pipe(autoprefixer('last 10 versions'))
-       .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-       return merge(bootstrapCSS, sassFiles)
-        .pipe(concat('app.css'))
-        .pipe(gulp.dest(APPPATH.css));
-});
 
-*/
+
 gulp.task('compresscss', function(){
     var bootstrapCSS = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
     var sassFiles;
@@ -85,7 +86,14 @@ gulp.task('compresscss', function(){
         .pipe(gulp.dest(APPPATH.css));
 });
 
-/*=====end of production task ====*/
+gulp.task('minifyHtml', function() {
+    return gulp.src(SOURCEPATHS.htmlSource)
+        .pipe(injectPartials())
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest(APPPATH.root));
+});
+
+/*==== end of PRODUCTION TASKS=====*/
 
 gulp.task('images', function() {
     return gulp.src(SOURCEPATHS.imgSource)
@@ -112,6 +120,7 @@ gulp.task('html', function() {
         .pipe(injectPartials())
         .pipe(gulp.dest(APPPATH.root));
 });
+
 /*
 gulp.task('copy',['clean-html'],   function() {
     gulp.src(SOURCEPATHS.htmlSource)
@@ -136,3 +145,5 @@ gulp.task('watch', ['serve', 'sass', /*'copy',*/ 'clean-html', 'scripts', 'clean
 });
 
 gulp.task('default', ['watch']);
+
+gulp.task('production', ['minifyHtml', 'compresscss', 'compress']);
