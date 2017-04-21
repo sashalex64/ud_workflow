@@ -1,0 +1,32 @@
+/*     STYLES     */
+
+$bg-color: desaturate(red, 50%);
+$tx-color:#fff;
+body {
+    background-color: $bg-color;
+}
+
+h1 {
+    color: $tx-color;
+    &:hover {
+        color:black;
+         transition: color 1s ease;   
+    }
+}
+
+h2 {
+     font-family: Consolas, monospace;  
+    font-weight: bold;
+}
+#headline {
+     color: blue; 
+    font-size: 0.3rem;;
+}
+footer {
+    h3 {
+        font-family: cursive;
+    }
+    p {
+         color:yellow;   
+    }
+}
